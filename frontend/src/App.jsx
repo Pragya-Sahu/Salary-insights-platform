@@ -6,14 +6,16 @@ function App() {
   const [search, setSearch] = useState('')
   const [country, setCountry] = useState('')
   const [jobTitle, setJobTitle] = useState('')
+  const [page, setPage] = useState(1)
 
   const fetchEmployees = (
     searchTerm = '',
     selectedCountry = '',
-    selectedJobTitle = ''
+    selectedJobTitle = '',
+    currentPage = 1
   ) => {
     fetch(
-      `http://localhost:3000/employees?page=1&per_page=10&search=${searchTerm}&country=${selectedCountry}&job_title=${selectedJobTitle}`
+      `http://localhost:3000/employees?page=${currentPage}&per_page=10&search=${searchTerm}&country=${selectedCountry}&job_title=${selectedJobTitle}`
     )
       .then((response) => response.json())
       .then((data) => setEmployees(data))
@@ -113,8 +115,10 @@ function App() {
                 fetchEmployees(
                   value,
                   country,
-                  jobTitle
+                  jobTitle,
+                  1
                 )
+                setPage(1)
               }}
               className="border border-gray-300 rounded-lg px-4 py-3"
             />
@@ -129,8 +133,10 @@ function App() {
                 fetchEmployees(
                   search,
                   value,
-                  jobTitle
+                  jobTitle,
+                  1
                 )
+                setPage(1)
               }}
               className="border border-gray-300 rounded-lg px-4 py-3"
             >
@@ -151,8 +157,10 @@ function App() {
                 fetchEmployees(
                   search,
                   country,
-                  value
+                  value,
+                  1
                 )
+                setPage(1)
               }}
               className="border border-gray-300 rounded-lg px-4 py-3"
             >
@@ -224,6 +232,47 @@ function App() {
             </tbody>
 
           </table>
+
+        </div>
+
+        <div className="flex justify-end gap-4 mt-6">
+
+          <button
+            disabled={page === 1}
+            onClick={() => {
+              const newPage = page - 1
+
+              setPage(newPage)
+
+              fetchEmployees(
+                search,
+                country,
+                jobTitle,
+                newPage
+              )
+            }}
+            className="bg-white border border-gray-300 px-4 py-2 rounded-lg disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          <button
+            onClick={() => {
+              const newPage = page + 1
+
+              setPage(newPage)
+
+              fetchEmployees(
+                search,
+                country,
+                jobTitle,
+                newPage
+              )
+            }}
+            className="bg-gray-900 text-white px-4 py-2 rounded-lg"
+          >
+            Next
+          </button>
 
         </div>
 
