@@ -4,10 +4,16 @@ function App() {
   const [salaryInsights, setSalaryInsights] = useState(null)
   const [employees, setEmployees] = useState([])
   const [search, setSearch] = useState('')
+  const [country, setCountry] = useState('')
+  const [jobTitle, setJobTitle] = useState('')
 
-  const fetchEmployees = (searchTerm = '') => {
+  const fetchEmployees = (
+    searchTerm = '',
+    selectedCountry = '',
+    selectedJobTitle = ''
+  ) => {
     fetch(
-      `http://localhost:3000/employees?page=1&per_page=10&search=${searchTerm}`
+      `http://localhost:3000/employees?page=1&per_page=10&search=${searchTerm}&country=${selectedCountry}&job_title=${selectedJobTitle}`
     )
       .then((response) => response.json())
       .then((data) => setEmployees(data))
@@ -93,18 +99,82 @@ function App() {
 
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
 
-          <input
-            type="text"
-            placeholder="Search employees..."
-            value={search}
-            onChange={(event) => {
-              const value = event.target.value
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-              setSearch(value)
-              fetchEmployees(value)
-            }}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3"
-          />
+            <input
+              type="text"
+              placeholder="Search employees..."
+              value={search}
+              onChange={(event) => {
+                const value = event.target.value
+
+                setSearch(value)
+
+                fetchEmployees(
+                  value,
+                  country,
+                  jobTitle
+                )
+              }}
+              className="border border-gray-300 rounded-lg px-4 py-3"
+            />
+
+            <select
+              value={country}
+              onChange={(event) => {
+                const value = event.target.value
+
+                setCountry(value)
+
+                fetchEmployees(
+                  search,
+                  value,
+                  jobTitle
+                )
+              }}
+              className="border border-gray-300 rounded-lg px-4 py-3"
+            >
+              <option value="">All Countries</option>
+              <option value="India">India</option>
+              <option value="USA">USA</option>
+              <option value="Germany">Germany</option>
+              <option value="Canada">Canada</option>
+            </select>
+
+            <select
+              value={jobTitle}
+              onChange={(event) => {
+                const value = event.target.value
+
+                setJobTitle(value)
+
+                fetchEmployees(
+                  search,
+                  country,
+                  value
+                )
+              }}
+              className="border border-gray-300 rounded-lg px-4 py-3"
+            >
+              <option value="">All Job Titles</option>
+              <option value="Software Engineer">
+                Software Engineer
+              </option>
+              <option value="Senior Engineer">
+                Senior Engineer
+              </option>
+              <option value="Product Manager">
+                Product Manager
+              </option>
+              <option value="HR Manager">
+                HR Manager
+              </option>
+              <option value="Data Analyst">
+                Data Analyst
+              </option>
+            </select>
+
+          </div>
 
         </div>
 
