@@ -16,6 +16,7 @@ function App() {
   const [jobTitle, setJobTitle] = useState('')
   const [page, setPage] = useState(1)
   const [departmentInsights, setDepartmentInsights] = useState([])
+  const [error, setError] = useState(null)
 
   const fetchEmployees = (
     searchTerm = '',
@@ -28,22 +29,41 @@ function App() {
     )
       .then((response) => response.json())
       .then((data) => setEmployees(data))
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        setError('Failed to load dashboard data')
+      })
   }
 
   useEffect(() => {
     fetch('http://localhost:3000/employees/salary_insights')
       .then((response) => response.json())
       .then((data) => setSalaryInsights(data))
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        setError('Failed to load dashboard data')
+      })
 
     fetchEmployees()
 
     fetch('http://localhost:3000/employees/grouped_by_department_salary_insights')
       .then((response) => response.json())
       .then((data) => setDepartmentInsights(data))
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        setError('Failed to load dashboard data')
+      })
   }, [])
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-red-600 text-xl">
+          {error}
+        </p>
+      </div>
+    )
+  }
 
   if (!salaryInsights) {
     return (
