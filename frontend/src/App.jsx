@@ -1,4 +1,12 @@
 import { useEffect, useState } from 'react'
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
 
 function App() {
   const [salaryInsights, setSalaryInsights] = useState(null)
@@ -7,6 +15,7 @@ function App() {
   const [country, setCountry] = useState('')
   const [jobTitle, setJobTitle] = useState('')
   const [page, setPage] = useState(1)
+  const [departmentInsights, setDepartmentInsights] = useState([])
 
   const fetchEmployees = (
     searchTerm = '',
@@ -29,6 +38,11 @@ function App() {
       .catch((error) => console.error(error))
 
     fetchEmployees()
+
+    fetch('http://localhost:3000/employees/grouped_by_department_salary_insights')
+      .then((response) => response.json())
+      .then((data) => setDepartmentInsights(data))
+      .catch((error) => console.error(error))
   }, [])
 
   if (!salaryInsights) {
@@ -273,6 +287,37 @@ function App() {
           >
             Next
           </button>
+
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm p-6 mt-8">
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            Average Salary by Department
+          </h2>
+
+          <div className="h-96">
+
+            <ResponsiveContainer width="100%" height="100%">
+
+              <BarChart data={departmentInsights}>
+
+                <XAxis dataKey="department" />
+
+                <YAxis />
+
+                <Tooltip />
+
+                <Bar
+                  dataKey="average_salary"
+                  radius={[8, 8, 0, 0]}
+                />
+
+              </BarChart>
+
+            </ResponsiveContainer>
+
+          </div>
 
         </div>
 
