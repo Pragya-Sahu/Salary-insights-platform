@@ -21,3 +21,8 @@ Building a lightweight salary management platform for HR managers.
 - PostgreSQL
 - RSpec
 - batch seeding strategy for large datasets
+
+## Performance
+- added reusable query object for composable filtering
+- optimized employee filtering with database indexes
+- designed salary aggregation APIs for scalability
